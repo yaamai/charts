@@ -23,6 +23,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: GITEA_CUSTOM
+            value: /data/custom
           ports:
             - name: http
               containerPort: 3000
@@ -35,6 +38,10 @@ spec:
             httpGet:
               path: /api/v1/version
               port: http
+          volumeMounts:
+          - mountPath: /data
+            name: gitea-data
+            subPath: gitea
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -49,3 +56,12 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+      - name: gitea-data
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default (include "gitea.fullname" .) }}
+      {{- else }}
+        emptyDir: {}
+      {{ end }}
+
