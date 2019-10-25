@@ -19,31 +19,58 @@ spec:
         app.kubernetes.io/name: {{ include "gitea.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      initContainers:
+      - name: generate-secret-conf
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["ash", "-c"]
+        args:
+        - |
+          mkdir -p /data/custom/secret;
+          mkdir -p /data/custom/conf;
+          p=/data/custom/secret/internal-token; [[ ! -f $p || ! -s $p ]] && gitea generate secret INTERNAL_TOKEN > $p;
+          p=/data/custom/secret/jwt-secret; [[ ! -f $p || ! -s $p ]] && gitea generate secret JWT_SECRET > $p;
+          p=/data/custom/secret/lfs-jwt-secret; [[ ! -f $p || ! -s $p ]] && gitea generate secret LFS_JWT_SECRET > $p;
+          p=/data/custom/secret/secret-key; [[ ! -f $p || ! -s $p ]] && gitea generate secret SECRET_KEY > $p;
+          sed \
+            -e 's:%INTERNAL_TOKEN%:'$(cat /data/custom/secret/internal-token)':' \
+            -e 's:%JWT_SECRET%:'$(cat /data/custom/secret/jwt-secret)':' \
+            -e 's:%LFS_JWT_SECRET%:'$(cat /data/custom/secret/lfs-jwt-secret)':' \
+            -e 's:%SECRET_KEY%:'$(cat /data/custom/secret/secret-key)':' \
+            /data/custom/conf-template/app.ini > /data/custom/conf/app.ini
+        volumeMounts:
+        - mountPath: /data
+          name: gitea-data
+          subPath: gitea
+        - mountPath: /data/custom/conf-template
+          name: gitea-config
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-          - name: GITEA_CUSTOM
-            value: /data/custom
-          ports:
-            - name: http
-              containerPort: 3000
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /api/v1/version
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /api/v1/version
-              port: http
-          volumeMounts:
-          - mountPath: /data
-            name: gitea-data
-            subPath: gitea
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: GITEA_CUSTOM
+          value: /data/custom
+        ports:
+          - name: http
+            containerPort: 3000
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /api/v1/version
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /api/v1/version
+            port: http
+        volumeMounts:
+        - mountPath: /data
+          name: gitea-data
+          subPath: gitea
+        - mountPath: /data/custom/conf-template
+          name: gitea-config
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -57,6 +84,9 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       volumes:
+      - name: gitea-config
+        configMap:
+          name: {{ .Values.persistence.existingClaim | default (include "gitea.fullname" .) }}
       - name: gitea-data
       {{- if .Values.persistence.enabled }}
         persistentVolumeClaim:

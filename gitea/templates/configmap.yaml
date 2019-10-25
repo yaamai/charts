@@ -1,0 +1,69 @@
+# to edit yaml via kubectl prettily, plz avoid trailing space (#36222)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gitea.fullname" . }}
+  labels:
+    app: "{{ template "gitea.fullname" . }}"
+    chart: "{{ template "gitea.chart" . }}"
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+data:
+  app.ini: |
+    APP_NAME = Gitea: Git with a cup of tea
+    RUN_MODE = dev
+
+    [repository]
+    ROOT = /data/git/repositories
+
+    [repository.local]
+    LOCAL_COPY_PATH = /data/gitea/tmp/local-repo
+
+    [repository.upload]
+    TEMP_PATH = /data/gitea/uploads
+
+    [server]
+    APP_DATA_PATH    = /data/gitea
+    SSH_DOMAIN       = localhost
+    HTTP_PORT        = 3000
+    ;ROOT_URL         =
+    DISABLE_SSH      = false
+    SSH_PORT         = 22
+    LFS_START_SERVER = false
+    LFS_CONTENT_PATH = /data/git/lfs
+
+    [database]
+    PATH    = /data/gitea/gitea.db
+    DB_TYPE = sqlite3
+    HOST    = localhost:3306
+    NAME    = gitea
+    USER    = root
+    ;PASSWD  =
+
+    [indexer]
+    ISSUE_INDEXER_PATH = /data/gitea/indexers/issues.bleve
+
+    [session]
+    PROVIDER_CONFIG = /data/gitea/sessions
+
+    [picture]
+    AVATAR_UPLOAD_PATH            = /data/gitea/avatars
+    REPOSITORY_AVATAR_UPLOAD_PATH = /data/gitea/repo-avatars
+
+    [attachment]
+    PATH = /data/gitea/attachments
+
+    [log]
+    ROOT_PATH = /data/gitea/log
+
+    [security]
+    INSTALL_LOCK   = false
+    ;SECRET_KEY     =
+    INTERNAL_TOKEN = %INTERNAL_TOKEN%
+
+    [service]
+    DISABLE_REGISTRATION = false
+    REQUIRE_SIGNIN_VIEW  = false
+
+    [oauth2]
+    JWT_SECRET = %JWT_SECRET%
