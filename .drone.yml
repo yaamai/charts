@@ -11,7 +11,20 @@ steps:
   - helm repo index . --url https://yaamai.github.io/charts
 - name: publish
   image: alpine/git
+  environment:
+    SSH_KEY:
+      from_secret: github_ssh_private_key
   commands:
-  - git checkout -b gh-pages
+# prepare git
+  - git config user.email "drone@local.local"
+  - git config user.name "drone-ci"
+  - mkdir ~/.ssh
+  - chmod 750 ~/.ssh
+  - echo "$SSH_KEY" > ~/.ssh/id_rsa
+  - chmod 400 ~/.ssh/id_rsa
+  - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+  - git remote set-url origin git@github.com:yaamai/charts
+  - git fetch && git checkout gh-pages
   - git add -A .
   - git commit -m "Update"
+  - git push -u origin gh-pages
