@@ -6,10 +6,12 @@ steps:
 - name: build
   image: alpine/helm:2.15.1
   commands:
-  - ls
   - helm init --client-only
-  - mkdir -p ~/.helm/repository
   - helm package gitea
   - helm repo index . --url https://yaamai.github.io/charts
-  - ls
+- name: publish
+  image: alpine/git
+  commands:
   - git checkout -b gh-pages
+  - git add -A .
+  - git commit -m "Update"
