@@ -35,6 +35,7 @@ data:
     DOMAIN           = localhost
     LFS_JWT_SECRET   = %LFS_JWT_SECRET%
     OFFLINE_MODE     = true
+    LANDING_PAGE     = explorer
     
     [database]
     PATH     = /data/gitea/gitea.db
@@ -65,8 +66,9 @@ data:
     [log]
     ROOT_PATH = /data/gitea/log
     MODE      = console
-    LEVEL     = trace
-    STACKTRACE_LEVEL = trace
+    ; Trace, Debug, Info, Warn, Error, Critical, Fatal, None
+    LEVEL     = info
+    STACKTRACE_LEVEL = none
     
     [security]
     INSTALL_LOCK   = true
@@ -94,3 +96,6 @@ data:
     [openid]
     ENABLE_OPENID_SIGNIN = true
     ENABLE_OPENID_SIGNUP = true
+
+    [webhook]
+    SKIP_TLS_VERIFY = false

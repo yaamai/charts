@@ -59,12 +59,12 @@ spec:
           httpGet:
             path: /api/v1/version
             port: http
-          initialDelaySeconds: 30
+          initialDelaySeconds: 5
         readinessProbe:
           httpGet:
             path: /api/v1/version
             port: http
-          initialDelaySeconds: 30
+          initialDelaySeconds: 5
         volumeMounts:
         - mountPath: /data
           name: gitea-data
