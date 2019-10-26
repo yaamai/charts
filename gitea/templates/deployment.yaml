@@ -55,6 +55,9 @@ spec:
           - name: http
             containerPort: 3000
             protocol: TCP
+          - name: ssh
+            containerPort: 22
+            protocol: TCP
         livenessProbe:
           httpGet:
             path: /api/v1/version
@@ -97,4 +100,3 @@ spec:
       {{- else }}
         emptyDir: {}
       {{ end }}
-
