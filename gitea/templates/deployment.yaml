@@ -61,9 +61,10 @@ spec:
             port: http
           initialDelaySeconds: 5
         readinessProbe:
-          httpGet:
-            path: /api/v1/version
-            port: http
+          exec:
+            command:
+            - s6-svok
+            - /etc/s6/gitea/
           initialDelaySeconds: 5
         volumeMounts:
         - mountPath: /data
