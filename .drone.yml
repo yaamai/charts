@@ -7,7 +7,9 @@ steps:
   image: alpine/helm:2.15.1
   commands:
   - ls
+  - helm init --client-only
+  - mkdir -p ~/.helm/repository
   - helm package gitea
-  - helm repo index .
+  - helm repo index . --url https://yaamai.github.io/charts
   - ls
   - git checkout -b gh-pages
