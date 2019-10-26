@@ -1,0 +1,13 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build
+  image: alpine/helm:2.15.1
+  commands:
+  - ls
+  - helm package gitea
+  - helm repo index .
+  - ls
+  - git checkout -b gh-pages
