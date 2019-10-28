@@ -10,10 +10,18 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.service.web.port }}
+      targetPort: web
       protocol: TCP
-      name: http
+      name: web
+    - port: {{ .Values.service.websecure.port }}
+      targetPort: websecure
+      protocol: TCP
+      name: websecure
+    - port: {{ .Values.service.traefik.port }}
+      targetPort: traefik
+      protocol: TCP
+      name: traefik
   selector:
     app.kubernetes.io/name: {{ include "traefik.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

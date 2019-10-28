@@ -14,7 +14,12 @@ fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 80
+  web:
+    port: 8000
+  websecure:
+    port: 8443
+  traefik:
+    port: 9000
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
