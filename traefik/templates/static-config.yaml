@@ -1,0 +1,46 @@
+# to edit yaml via kubectl prettily, plz avoid trailing space (#36222)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "traefik.fullname" . }}-static
+  labels:
+    app: "{{ template "traefik.fullname" . }}"
+    chart: "{{ template "traefik.chart" . }}"
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+data:
+  traefik.toml: |
+    [entryPoints]
+      [entryPoints.web]
+        address = ":8000"
+      [entryPoints.websecure]
+        address = ":8443"
+      [entryPoints.traefik]
+        address = ":9000"
+    [api]
+      dashboard = true
+      insecure = true
+    [ping]
+      entryPoint = "traefik"
+#  [providers.kubernetesIngress]
+#    endpoint = "foobar"
+#    token = "foobar"
+#    certAuthFilePath = "foobar"
+#    disablePassHostHeaders = true
+#    namespaces = ["foobar", "foobar"]
+#    labelSelector = "foobar"
+#    ingressClass = "foobar"
+#    throttleDuration = "10s"
+#    [providers.kubernetesIngress.ingressEndpoint]
+#      ip = "foobar"
+#      hostname = "foobar"
+#      publishedService = "foobar"
+#  [providers.kubernetesCRD]
+#    endpoint = "foobar"
+#    token = "foobar"
+#    certAuthFilePath = "foobar"
+#    disablePassHostHeaders = true
+#    namespaces = ["foobar", "foobar"]
+#    labelSelector = "foobar"
+#    ingressClass = "foobar"
+#    throttleDuration = "10s"
