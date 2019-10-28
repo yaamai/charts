@@ -26,11 +26,14 @@ spec:
         args:
         - --configFile=/etc/traefik/traefik.toml
         ports:
-          - name: http
-            containerPort: 8000
+          - name: web
+            containerPort: {{ .Values.ports.web.port }}
+            protocol: TCP
+          - name: websecure
+            containerPort: {{ .Values.ports.websecure.port }}
             protocol: TCP
           - name: traefik
-            containerPort: 9000
+            containerPort: {{ .Values.ports.traefik.port }}
             protocol: TCP
         livenessProbe:
           httpGet:

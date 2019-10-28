@@ -12,11 +12,11 @@ data:
   traefik.toml: |
     [entryPoints]
       [entryPoints.web]
-        address = ":8000"
+        address = ":{{ .Values.ports.web.port }}"
       [entryPoints.websecure]
-        address = ":8443"
+        address = ":{{ .Values.ports.websecure.port }}"
       [entryPoints.traefik]
-        address = ":9000"
+        address = ":{{ .Values.ports.traefik.port }}"
     [api]
       dashboard = true
       insecure = true
