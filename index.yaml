@@ -3,11 +3,11 @@ entries:
   gitea:
   - apiVersion: v1
     appVersion: 1.9.4
-    created: "2019-10-26T16:20:05.937449209Z"
+    created: "2019-10-28T18:08:28.952452444Z"
     description: A Helm chart for Kubernetes
-    digest: bd511b27a15baf7631dc08d59ecbdd68e1420e0610972f7f39b020eb612f640b
+    digest: 20cc6735d2665605e47d51f9b373862429b97daf0392d6449999b5f1d38cd8d7
     name: gitea
     urls:
     - https://yaamai.github.io/charts/gitea-0.1.0.tgz
     version: 0.1.0
-generated: "2019-10-26T16:20:05.936841157Z"
+generated: "2019-10-28T18:08:28.951816396Z"
