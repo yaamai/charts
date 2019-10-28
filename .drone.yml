@@ -8,7 +8,7 @@ steps:
   commands:
   - mkdir -p out
   - helm init --client-only
-  - helm package gitea -d out
+  - find . -type d -exec helm package '{}' -d out \;
   - cd out; helm repo index . --url https://yaamai.github.io/charts
 - name: publish
   image: alpine/git
