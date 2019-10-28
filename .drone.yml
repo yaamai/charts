@@ -6,9 +6,10 @@ steps:
 - name: build
   image: alpine/helm:2.15.1
   commands:
+  - mkdir -p out
   - helm init --client-only
-  - helm package gitea
-  - helm repo index . --url https://yaamai.github.io/charts
+  - helm package gitea -d out
+  - cd out; helm repo index . --url https://yaamai.github.io/charts
 - name: publish
   image: alpine/git
   environment:
@@ -24,7 +25,8 @@ steps:
   - chmod 400 ~/.ssh/id_rsa
   - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
   - git remote set-url origin git@github.com:yaamai/charts
-  - git fetch && git stash -u && git checkout gh-pages
+  - git fetch && git checkout gh-pages
+  - mv out/* .
   - git add -A .
   - git commit -m "Update"
   - git push -u origin gh-pages
