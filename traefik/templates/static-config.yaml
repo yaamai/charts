@@ -22,7 +22,10 @@ data:
       insecure = true
     [ping]
       entryPoint = "traefik"
-#  [providers.kubernetesIngress]
+    [providers]
+      [providers.kubernetesIngress]
+      [providers.kubernetesCRD]
+
 #    endpoint = "foobar"
 #    token = "foobar"
 #    certAuthFilePath = "foobar"
