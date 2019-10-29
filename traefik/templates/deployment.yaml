@@ -47,6 +47,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/traefik
           name: static-config
+        - mountPath: /configs
+          name: dynamic-config
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -65,3 +67,6 @@ spec:
       - name: static-config
         configMap:
           name: {{ default (include "traefik.fullname" .) }}-static
+      - name: dynamic-config
+        configMap:
+          name: {{ default (include "traefik.fullname" .) }}-dynamic

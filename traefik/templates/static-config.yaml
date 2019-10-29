@@ -25,6 +25,8 @@ data:
     [providers]
       [providers.kubernetesIngress]
       [providers.kubernetesCRD]
+      [providers.file]
+        directory = "/configs"
 
 #    endpoint = "foobar"
 #    token = "foobar"
