@@ -3,9 +3,9 @@ entries:
   gitea:
   - apiVersion: v1
     appVersion: 1.9.4
-    created: "2019-10-28T18:11:21.157073694Z"
+    created: "2019-10-30T11:51:33.53545676Z"
     description: A Helm chart for Kubernetes
-    digest: b7752f32f262864b974422883ac45db1b853a7af7d84cbccb7f120ba27433834
+    digest: 9af52f5dc9ac262e8f20cccad7ae6b3d4d7a52ababa5d6fa58b9d422eee4b563
     name: gitea
     urls:
     - https://yaamai.github.io/charts/gitea-0.1.0.tgz
@@ -13,11 +13,11 @@ entries:
   traefik:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2019-10-28T18:11:21.15749665Z"
+    created: "2019-10-30T11:51:33.536072728Z"
     description: A Helm chart for Kubernetes
-    digest: 454f5eb37e8c53058715e1f1498a1ee606f82e8ce11911e4ef622582b194cc26
+    digest: f08155ce66e452be3bbf0039559c36997ac8bb97d0e5e3bd35caf4ba9dd7aca4
     name: traefik
     urls:
-    - https://yaamai.github.io/charts/traefik-0.1.0.tgz
-    version: 0.1.0
-generated: "2019-10-28T18:11:21.156429681Z"
+    - https://yaamai.github.io/charts/traefik-0.1.1.tgz
+    version: 0.1.1
+generated: "2019-10-30T11:51:33.534502657Z"
