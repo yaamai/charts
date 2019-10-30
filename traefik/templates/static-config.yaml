@@ -10,42 +10,49 @@ metadata:
     heritage: {{ .Release.Service | quote }}
 data:
   traefik.toml: |
+    logLevel = "DEBUG"
+    debug = true
+    defaultEntryPoints = ["https"]
+    insecureSkipVerify = true
+    
     [entryPoints]
-      [entryPoints.web]
-        address = ":{{ .Values.ports.web.port }}"
-      [entryPoints.websecure]
-        address = ":{{ .Values.ports.websecure.port }}"
-      [entryPoints.traefik]
+      [entryPoints.api]
         address = ":{{ .Values.ports.traefik.port }}"
-    [api]
-      dashboard = true
-      insecure = true
-    [ping]
-      entryPoint = "traefik"
-    [providers]
-      [providers.kubernetesIngress]
-      [providers.kubernetesCRD]
-      [providers.file]
-        directory = "/configs"
+    
+      [entryPoints.http]
+        address = ":{{ .Values.ports.web.port }}"
+        compress = true
+    
+        [entryPoints.http.redirect]
+          entryPoint = "https"
+    
+      [entryPoints.https]
+        address = ":{{ .Values.ports.websecure.port }}"
+        compress = true
+    
+        [entryPoints.https.tls]
+          minVersion = "VersionTLS11"
+          cipherSuites = [
+            "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305",
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+            "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+            "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+            "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA"
+          ]
+    
+          {{- if .Values.ssl.defaultCertSecretName }}
+          [[entryPoints.https.tls.certificates]]
+            CertFile = "/ssl/default/tls.crt"
+            KeyFile = "/ssl/default/tls.key"
+          {{- end }}
 
-#    endpoint = "foobar"
-#    token = "foobar"
-#    certAuthFilePath = "foobar"
-#    disablePassHostHeaders = true
-#    namespaces = ["foobar", "foobar"]
-#    labelSelector = "foobar"
-#    ingressClass = "foobar"
-#    throttleDuration = "10s"
-#    [providers.kubernetesIngress.ingressEndpoint]
-#      ip = "foobar"
-#      hostname = "foobar"
-#      publishedService = "foobar"
-#  [providers.kubernetesCRD]
-#    endpoint = "foobar"
-#    token = "foobar"
-#    certAuthFilePath = "foobar"
-#    disablePassHostHeaders = true
-#    namespaces = ["foobar", "foobar"]
-#    labelSelector = "foobar"
-#    ingressClass = "foobar"
-#    throttleDuration = "10s"
+          {{- if .Values.ssl.mtls.clientCaSecretName }}
+          [entryPoints.https.tls.ClientCA]
+            files = ["/ssl/client-ca/ca.crt"]
+            optional = {{ .Values.ssl.mtls.optional }}
+          {{- end }}
+    [kubernetes]
+    [api]
+      entryPoint = "api"
+      dashboard = true
+      debug = true
